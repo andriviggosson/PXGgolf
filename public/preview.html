@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PXG Ísland — Kylfur í Heimsklassa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8C6E28;
+    --black: #000;
+    --card: #0E0E0E;
+    --border: #1C1C1C;
+    --muted: #787878;
+    --dim: #B0B0B0;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: #fff; font-family: 'Barlow Condensed', sans-serif; overflow-x: hidden; }
+  h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+  ::selection { background: var(--gold); color: #000; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+  @keyframes shimmer {
+    0% { background-position: -300% center; }
+    100% { background-position: 300% center; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineDown {
+    from { height: 0; }
+    to { height: 70px; }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .gold-text {
+    background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 30%, var(--gold) 50%, var(--gold-light) 70%, var(--gold-dark) 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 72px;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(0,0,0,0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px; text-decoration: none;
+  }
+  .logo-mark {
+    width: 42px; height: 42px; background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  }
+  .logo-mark span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 1.3rem; color: #000;
+    letter-spacing: -0.02em;
+  }
+  .logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem; color: #fff;
+    letter-spacing: 0.35em; text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 40px; }
+  .nav-link {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    transition: color 0.3s; position: relative;
+  }
+  .nav-link::after {
+    content: ''; position: absolute; bottom: -3px; left: 0;
+    width: 0; height: 1px; background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover { color: #fff; }
+  .nav-link:hover::after { width: 100%; }
+  .nav-cta {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 9px 22px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s; text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--gold); color: #000; }
+
+  /* HERO */
+  .hero {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 40% 60%, #1c1400 0%, #080600 40%, #000 70%);
+  }
+  .hero-bg-lines {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .hero-bg-lines::before, .hero-bg-lines::after {
+    content: ''; position: absolute;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.08), transparent);
+    width: 1px;
+  }
+  .hero-bg-lines::before { height: 60%; top: 20%; left: 20%; }
+  .hero-bg-lines::after { height: 80%; top: 10%; right: 25%; }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+
+  .hero-content {
+    position: relative; text-align: center;
+    padding: 0 24px; max-width: 960px;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; margin-bottom: 36px;
+  }
+  .hero-eyebrow-line { width: 48px; height: 1px; background: var(--gold); }
+  .hero-eyebrow-text {
+    color: var(--gold); font-size: 0.68rem; letter-spacing: 0.32em;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .hero-title {
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.88; margin-bottom: 36px; letter-spacing: 0.02em;
+  }
+  .hero-title .line1 { display: block; color: #fff; font-weight: 300; }
+  .hero-title .line2 { display: block; font-style: italic; }
+  .hero-sub {
+    color: var(--muted); font-size: 1.05rem; letter-spacing: 0.08em;
+    line-height: 1.7; max-width: 520px; margin: 0 auto 52px;
+  }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-fill {
+    background: var(--gold); color: #000; border: 1px solid var(--gold);
+    padding: 14px 36px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-fill:hover { background: var(--gold-light); border-color: var(--gold-light); }
+  .btn-outline {
+    background: transparent; color: var(--gold); border: 1px solid var(--gold);
+    padding: 14px 36px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { background: var(--gold); color: #000; }
+
+  .scroll-indicator {
+    position: absolute; bottom: 44px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    animation: fadeUp 1s ease 1.4s both;
+  }
+  .scroll-label {
+    color: var(--muted); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 70px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: lineDown 1.5s ease 1.6s both, pulse 2s ease 3.1s infinite;
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--card);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 28px 48px;
+    display: flex; justify-content: center;
+    gap: clamp(48px, 8vw, 140px); flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; color: var(--gold); font-weight: 300;
+    line-height: 1;
+  }
+  .stat-label {
+    color: var(--muted); font-size: 0.65rem;
+    letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px;
+  }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 56px; }
+  .section-eyebrow {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+  }
+  .eyebrow-line { width: 40px; height: 1px; background: var(--gold); }
+  .eyebrow-text {
+    color: var(--gold); font-size: 0.68rem;
+    letter-spacing: 0.28em; text-transform: uppercase; font-weight: 500;
+  }
+  .section-title { font-size: clamp(2rem, 4.5vw, 3.8rem); color: #fff; }
+
+  /* CATEGORIES */
+  .categories-section { padding: 96px 48px; }
+  .container { max-width: 1240px; margin: 0 auto; }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px; background: var(--border);
+  }
+  .cat-card {
+    background: var(--card); padding: 44px 36px;
+    position: relative; overflow: hidden; cursor: pointer;
+    transition: background 0.3s;
+    text-decoration: none; display: block;
+  }
+  .cat-card:hover { background: #131313; }
+  .cat-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .cat-card:hover::after { transform: scaleX(1); }
+  .cat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; color: var(--border);
+    font-weight: 300; font-style: italic;
+    line-height: 1; margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+  .cat-card:hover .cat-num { color: rgba(201,168,76,0.2); }
+  .cat-name { color: #fff; font-size: 1.6rem; margin-bottom: 8px; }
+  .cat-desc { color: var(--muted); font-size: 0.82rem; letter-spacing: 0.06em; }
+  .cat-arrow {
+    position: absolute; bottom: 28px; right: 28px;
+    color: var(--gold); font-size: 1.3rem;
+    transform: translateX(-4px); transition: transform 0.3s;
+  }
+  .cat-card:hover .cat-arrow { transform: translateX(0); }
+
+  /* CLUBS */
+  .clubs-section { padding: 80px 48px; background: #050505; }
+  .filter-tabs {
+    display: flex; gap: 4px; margin-bottom: 48px; flex-wrap: wrap;
+  }
+  .filter-tab {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); padding: 8px 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .filter-tab.active, .filter-tab:hover {
+    border-color: var(--gold); color: var(--gold);
+  }
+  .filter-tab.active { background: rgba(201,168,76,0.08); }
+  .clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .club-card {
+    background: var(--card); border: 1px solid var(--border);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative; overflow: hidden;
+  }
+  .club-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 64px rgba(201,168,76,0.12);
+  }
+  .club-card::before {
+    content: ''; position: absolute; inset: 0;
+    border: 1px solid transparent; transition: border-color 0.4s;
+    pointer-events: none; z-index: 10;
+  }
+  .club-card:hover::before { border-color: var(--gold); }
+  .club-img {
+    aspect-ratio: 4/3; background: #080808;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .club-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .club-card:hover .club-img img { transform: scale(1.06); }
+  .club-img-placeholder {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; color: var(--border); font-style: italic;
+  }
+  .club-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold); color: #000;
+    font-size: 0.58rem; font-weight: 700; letter-spacing: 0.15em;
+    padding: 4px 10px; text-transform: uppercase;
+  }
+  .club-info { padding: 24px; }
+  .club-cat {
+    color: var(--gold); font-size: 0.62rem;
+    letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .club-name { color: #fff; font-size: 1.35rem; margin-bottom: 8px; }
+  .club-tagline { color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-bottom: 20px; }
+  .club-footer { display: flex; justify-content: space-between; align-items: center; }
+  .club-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; color: var(--gold); font-weight: 300;
+  }
+  .btn-sm {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 8px 18px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .btn-sm:hover { background: var(--gold); color: #000; }
+
+  /* ABOUT */
+  .about-section { padding: 100px 48px; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; }
+  .about-text p { color: var(--muted); line-height: 1.85; margin-bottom: 24px; font-size: 1rem; }
+  .about-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 44px; position: relative;
+  }
+  .about-card-top-line {
+    position: absolute; top: -1px; left: 44px; right: 44px;
+    height: 2px; background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  }
+  .about-feature { display: flex; gap: 20px; }
+  .about-feature + .about-feature { margin-top: 32px; }
+  .feature-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; color: var(--gold); min-width: 36px; line-height: 1;
+  }
+  .feature-title {
+    color: #fff; font-size: 0.85rem; letter-spacing: 0.12em;
+    text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif;
+    margin-bottom: 8px;
+  }
+  .feature-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.7; }
+  .divider { height: 1px; background: var(--border); margin: 28px 0 0 56px; }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 96px 48px;
+    background: var(--card); border-top: 1px solid var(--border);
+  }
+  .contact-inner { max-width: 620px; margin: 0 auto; text-align: center; }
+  .contact-inner .section-eyebrow { justify-content: center; }
+  .contact-sub { color: var(--muted); line-height: 1.8; margin-bottom: 52px; }
+  form { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  input, textarea, select {
+    background: #0a0a0a; border: 1px solid var(--border);
+    color: #fff; padding: 12px 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; letter-spacing: 0.06em;
+    outline: none; transition: border-color 0.3s; width: 100%;
+  }
+  input:focus, textarea:focus { border-color: var(--gold); }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  textarea { resize: vertical; }
+
+  /* FOOTER */
+  footer {
+    padding: 36px 48px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-copy { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.1em; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-link { color: var(--muted); text-decoration: none; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+  .footer-link:hover { color: var(--gold); }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-mark"><span>PXG</span></div>
+    <span class="logo-text">Ísland</span>
+  </a>
+  <div class="nav-links">
+    <a href="#kylfur" class="nav-link">Kylfur</a>
+    <a href="#flokkar" class="nav-link">Flokkar</a>
+    <a href="#um-pxg" class="nav-link">Um PXG</a>
+    <a href="#samband" class="nav-link">Samband</a>
+  </div>
+  <a href="#kylfur" class="nav-cta">Skoða kylfur</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">Umboðsaðili á Íslandi</span>
+      <div class="hero-eyebrow-line"></div>
+    </div>
+    <h1 class="hero-title">
+      <span class="line1">Kylfur í</span>
+      <span class="line2 gold-text">Heimsklassa</span>
+    </h1>
+    <p class="hero-sub">PXG kylfur eru hannaðar með fullkomnun í huga — hannaðar af öðrum, kylfur af engum.</p>
+    <div class="hero-ctas">
+      <a href="#kylfur" class="btn-fill">Skoða kylfur</a>
+      <a href="#um-pxg" class="btn-outline">Kynntu þér PXG</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span class="scroll-label">Skruna</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Tour leikendur</div></div>
+  <div class="stat"><div class="stat-num">2014</div><div class="stat-label">Stofnað</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Handsmíðað</div></div>
+  <div class="stat"><div class="stat-num">#1</div><div class="stat-label">Í heiminum</div></div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories-section" id="flokkar">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Flokkar</span>
+      </div>
+      <h2 class="section-title">Kylfur fyrir hvern leik</h2>
+    </div>
+    <div class="categories-grid">
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('driver')">
+        <div class="cat-num">01</div>
+        <h3 class="cat-name">Drivers</h3>
+        <p class="cat-desc">Lengd og nákvæmni af tee</p>
+        <span class="cat-arrow">→</span>
+      </a>
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('iron')">
+        <div class="cat-num">02</div>
+        <h3 class="cat-name">Járn</h3>
+        <p class="cat-desc">Nákvæmni í hverri högg</p>
+        <span class="cat-arrow">→</span>
+      </a>
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('wedge')">
+        <div class="cat-num">03</div>
+        <h3 class="cat-name">Wedges</h3>
+        <p class="cat-desc">Meistaraleikur í stuttu leiknum</p>
+        <span class="cat-arrow">→</span>
+      </a>
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('putter')">
+        <div class="cat-num">04</div>
+        <h3 class="cat-name">Putters</h3>
+        <p class="cat-desc">Sigurinn á putting green</p>
+        <span class="cat-arrow">→</span>
+      </a>
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('fairway')">
+        <div class="cat-num">05</div>
+        <h3 class="cat-name">Fairway Woods</h3>
+        <p class="cat-desc">Fjarlægð frá fairway</p>
+        <span class="cat-arrow">→</span>
+      </a>
+      <a href="#kylfur" class="cat-card" onclick="filterClubs('hybrid')">
+        <div class="cat-num">06</div>
+        <h3 class="cat-name">Hybrids</h3>
+        <p class="cat-desc">Besta af báðum heimum</p>
+        <span class="cat-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CLUBS -->
+<section class="clubs-section" id="kylfur">
+  <div class="container">
+    <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px">
+      <div>
+        <div class="section-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">Kylfur</span>
+        </div>
+        <h2 class="section-title">Úrval PXG kylfna</h2>
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" onclick="filterClubs('all', this)">Allar</button>
+        <button class="filter-tab" onclick="filterClubs('driver', this)">Drivers</button>
+        <button class="filter-tab" onclick="filterClubs('fairway', this)">Fairway</button>
+        <button class="filter-tab" onclick="filterClubs('hybrid', this)">Hybrid</button>
+        <button class="filter-tab" onclick="filterClubs('iron', this)">Járn</button>
+        <button class="filter-tab" onclick="filterClubs('wedge', this)">Wedges</button>
+        <button class="filter-tab" onclick="filterClubs('putter', this)">Putters</button>
+      </div>
+    </div>
+    <div class="clubs-grid" id="clubsGrid">
+
+      <!-- DRIVERS -->
+      <div class="club-card" data-cat="driver">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Lightning-Drivers-Max-10K_-Beauty_6bcb324e-9378-4941-86eb-184aa9346ddf.jpg?width=600" alt="Lightning Driver">
+          <span class="club-badge">Nýtt</span>
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Driver</div>
+          <h3 class="club-name">Lightning Driver</h3>
+          <p class="club-tagline">Hámarks hraði og lengd með þyngdarfræðilega fullkomnuð hönnun</p>
+          <div class="club-footer"><span class="club-price">$649</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="driver">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/BlackOps-0311-Driver-Beauty.jpg?width=600" alt="Black Ops Driver">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Driver</div>
+          <h3 class="club-name">Black Ops Driver</h3>
+          <p class="club-tagline">Tactical precision fyrir kröfuharðasta leikmanninn</p>
+          <div class="club-footer"><span class="club-price">$499</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="driver">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Wildcat-Driver-Beauty.jpg?width=600" alt="Wildcat Driver">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Driver</div>
+          <h3 class="club-name">Wildcat Driver</h3>
+          <p class="club-tagline">Aggressive performance á öllum stigum</p>
+          <div class="club-footer"><span class="club-price">$299</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="driver">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Secret-Weapon-Driver-Beauty_2c8914ad-d550-4034-a1d2-891188258086.jpg?width=600" alt="Secret Weapon Mini Driver">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Driver</div>
+          <h3 class="club-name">Secret Weapon Mini</h3>
+          <p class="club-tagline">Mini driver með hámarks stjórnun og lengd</p>
+          <div class="club-footer"><span class="club-price">$449</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <!-- FAIRWAY -->
+      <div class="club-card" data-cat="fairway">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Lightning-Fairways-Beauty_acfd207d-962a-471b-af86-0dbe30b060b3.jpg?width=600" alt="Lightning Fairway">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Fairway Wood</div>
+          <h3 class="club-name">Lightning Fairway</h3>
+          <p class="club-tagline">Ótrúleg lengd og hæð frá fairway</p>
+          <div class="club-footer"><span class="club-price">$379</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="fairway">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Black-Ops-Fairway-Beauty.jpg?width=600" alt="Black Ops Fairway">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Fairway Wood</div>
+          <h3 class="club-name">Black Ops Fairway</h3>
+          <p class="club-tagline">Precision fairway wood fyrir Tour leikinn</p>
+          <div class="club-footer"><span class="club-price">$299</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="fairway">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Wildcat-Fairway-Beauty.jpg?width=600" alt="Wildcat Fairway">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Fairway Wood</div>
+          <h3 class="club-name">Wildcat Fairway</h3>
+          <p class="club-tagline">Fjarlægð og nákvæmni frá fairway</p>
+          <div class="club-footer"><span class="club-price">$199</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <!-- HYBRID -->
+      <div class="club-card" data-cat="hybrid">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Lightning-Hybrid-Beauty_34091d4b-ed1f-40e8-b775-5cb0b63ee627.jpg?width=600" alt="Lightning Hybrid">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Hybrid</div>
+          <h3 class="club-name">Lightning Hybrid</h3>
+          <p class="club-tagline">Besta af driver og járn í einni kylfu</p>
+          <div class="club-footer"><span class="club-price">$329</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="hybrid">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Black-Ops-Hybrid-Beauty.jpg?width=600" alt="Black Ops Hybrid">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Hybrid</div>
+          <h3 class="club-name">Black Ops Hybrid</h3>
+          <p class="club-tagline">Tour-stig hybrid með tactical precision</p>
+          <div class="club-footer"><span class="club-price">$249</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <!-- IRONS -->
+      <div class="club-card" data-cat="iron">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/0311-P-GEN8-Iron-Chrome-Beauty_9d01dee1-61a5-44c6-9349-aa4682f4587a.jpg?width=600" alt="GEN8 Irons">
+          <span class="club-badge">Úrval</span>
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Járn</div>
+          <h3 class="club-name">GEN8 Irons</h3>
+          <p class="club-tagline">8. kynslóð — nákvæmni og feeling í heimsklassa</p>
+          <div class="club-footer"><span class="club-price">$229</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="iron">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/GEN7-P-Chrome-Iron-Beauty.jpg?width=600" alt="GEN7 Irons">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Járn</div>
+          <h3 class="club-name">GEN7 Irons</h3>
+          <p class="club-tagline">Prófaðar og treystanlegar — valinn af Tour leikendum</p>
+          <div class="club-footer"><span class="club-price">$189</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="iron">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/0317-Tour-Iron-Beauty.jpg?width=600" alt="0317 Irons">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Járn</div>
+          <h3 class="club-name">0317 Irons</h3>
+          <p class="club-tagline">Klassískt design með nútíma tækni</p>
+          <div class="club-footer"><span class="club-price">$189</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <!-- WEDGES -->
+      <div class="club-card" data-cat="wedge">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Sugar-Daddy-III-S-Grind-Wedge-Chrome-Beauty_ad946397-1eb7-4acb-aec7-17001a11f9b2.jpg?width=600" alt="Sugar Daddy III">
+          <span class="club-badge">Úrval</span>
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Wedge</div>
+          <h3 class="club-name">Sugar Daddy III</h3>
+          <p class="club-tagline">Óviðjafnanleg spin og control í stuttu leiknum</p>
+          <div class="club-footer"><span class="club-price">$299</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="wedge">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/0311-3X-Forged-Chrome-Wedge-Beauty.jpg?width=600" alt="0311 3X Forged">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Wedge</div>
+          <h3 class="club-name">0311 3X Forged</h3>
+          <p class="club-tagline">Þrefalt smiðaður stál — ultimate feeling</p>
+          <div class="club-footer"><span class="club-price">$179</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <!-- PUTTERS -->
+      <div class="club-card" data-cat="putter">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Bat-Attack-Zero-Torque-Putter-Beauty_194e1f7e-4735-41b9-9914-3bff8d42be2e.jpg?width=600" alt="Bat Attack ZT">
+          <span class="club-badge">Úrval</span>
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Putter</div>
+          <h3 class="club-name">Bat Attack ZT</h3>
+          <p class="club-tagline">Zero Torque tækni — konsistent stroke í hvert skipti</p>
+          <div class="club-footer"><span class="club-price">$449</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="putter">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/Brandon-Tour-I-Putter-Beauty.jpg?width=600" alt="Tour Series Brandon">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Putter</div>
+          <h3 class="club-name">Tour Series Brandon</h3>
+          <p class="club-tagline">Hannaður fyrir Tour — notaður af bestu leikmönnum</p>
+          <div class="club-footer"><span class="club-price">$499</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="putter">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/ECOM-3834-Torpedo-Config-Images-Beauty_4f8f267f-f045-45f5-bf38-4622390cfad0.jpg?width=600" alt="Battle Ready II Torpedo">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Putter</div>
+          <h3 class="club-name">Battle Ready II Torpedo</h3>
+          <p class="club-tagline">Tactical precision á green</p>
+          <div class="club-footer"><span class="club-price">$399</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+      <div class="club-card" data-cat="putter">
+        <div class="club-img">
+          <img src="https://www.pxg.com/cdn/shop/files/ECOM-3941-Mustang-Config-Photos-Beauty_2f5b9a07-cd73-403c-80d3-0d7b361ee55a.jpg?width=600" alt="Mustang ZT">
+        </div>
+        <div class="club-info">
+          <div class="club-cat">Putter</div>
+          <h3 class="club-name">Mustang ZT</h3>
+          <p class="club-tagline">Kraftur og nákvæmni — Zero Torque hönnun</p>
+          <div class="club-footer"><span class="club-price">$449</span><button class="btn-sm">Skoða</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="um-pxg">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">Um PXG</span>
+        </div>
+        <h2 class="section-title" style="margin-bottom:32px">Af hverju PXG?</h2>
+        <p>Parsons Xtreme Golf (PXG) var stofnað árið 2014 af Bob Parsons með einfalt markmið: Búa til bestu golfkylfur í heiminum — án tillits til kostnaðar.</p>
+        <p>Með patentaðar tækniúrlausnir og handsmíðaðar kylfur hefur PXG breytt því sem mögulegt er í golfheiminum. Hvert einasta stykki prófað og hannað til að gefa þér eitt: betri leikur.</p>
+        <a href="#samband" class="btn-outline">Hafa samband</a>
+      </div>
+      <div class="about-card">
+        <div class="about-card-top-line"></div>
+        <div class="about-feature">
+          <div class="feature-num">01</div>
+          <div>
+            <div class="feature-title">Þungamiðstöð tækni</div>
+            <p class="feature-desc">Patentaðar massa-stýringar aðferðir sem engin önnur fyrirtæki nota í heiminum.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="about-feature">
+          <div class="feature-num">02</div>
+          <div>
+            <div class="feature-title">Handsmíðað í BNA</div>
+            <p class="feature-desc">Hvert plagg smíðað í Scottsdale, Arizona með nákvæmustu aðferðum í greininni.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="about-feature">
+          <div class="feature-num">03</div>
+          <div>
+            <div class="feature-title">Custom Fitting</div>
+            <p class="feature-desc">Sérsniðnar kylfur sem passa nákvæmlega við þitt swing — við komum til þín.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="samband">
+  <div class="contact-inner">
+    <div class="section-eyebrow" style="justify-content:center">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Samband</span>
+      <div class="eyebrow-line"></div>
+    </div>
+    <h2 class="section-title" style="margin-bottom:16px">Hafðu samband</h2>
+    <p class="contact-sub">Viltu fá ráðgjöf um hvaða PXG kylfur henta þér best? Við erum hér til að hjálpa.</p>
+    <form onsubmit="event.preventDefault(); alert('Takk! Við munum hafa samband við þig fljótlega.')">
+      <div class="form-row">
+        <input placeholder="Nafn" required>
+        <input type="email" placeholder="Netfang" required>
+      </div>
+      <textarea placeholder="Skilaboð..." rows="4"></textarea>
+      <button type="submit" class="btn-fill" style="align-self:flex-start">Senda skilaboð</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 PXG Ísland. Öll réttindi áskilin.</span>
+  <div class="footer-links">
+    <a href="#" class="footer-link">Kylfur</a>
+    <a href="#um-pxg" class="footer-link">Um okkur</a>
+    <a href="#samband" class="footer-link">Samband</a>
+    <a href="/admin" class="footer-link">Admin</a>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav')
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60)
+  })
+
+  // Filter clubs
+  function filterClubs(cat, btn) {
+    const cards = document.querySelectorAll('.club-card')
+    const tabs = document.querySelectorAll('.filter-tab')
+
+    cards.forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = ''
+      } else {
+        card.style.display = 'none'
+      }
+    })
+
+    if (btn) {
+      tabs.forEach(t => t.classList.remove('active'))
+      btn.classList.add('active')
+    }
+  }
+</script>
+</body>
+</html>
