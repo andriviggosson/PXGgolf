@@ -30,7 +30,7 @@ function ProductCard({ club }: { club: Club }) {
             <img src={club.image_url} alt={club.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #060606, #0f0f0f)' }}>
-              <PxgLogo height={28} color="#1a1a1a" />
+              <PxgLogo height={28} color="Gold" />
             </div>
           )}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 50%)', pointerEvents: 'none' }} />
