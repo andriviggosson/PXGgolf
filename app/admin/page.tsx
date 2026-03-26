@@ -387,7 +387,7 @@ export default function AdminPage() {
                     onMouseEnter={e => (e.currentTarget.style.background = '#0d0d0d')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'var(--black-card)')}>
                     <div style={{ width: '48px', height: '48px', background: '#050505', border: '1px solid var(--black-border)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      {club.image_url ? <img src={club.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <PxgLogo height={12} color="#111" />}
+                      {club.image_url ? <img src={club.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <PxgLogo height={12} color="black" />}
                     </div>
                     <div>
                       <div style={{ color: '#fff', fontSize: '0.88rem', fontFamily: 'Cormorant Garamond' }}>{club.name}</div>
