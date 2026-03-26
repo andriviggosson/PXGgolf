@@ -177,7 +177,7 @@ function ProductsContent() {
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
-            <PxgLogo height={36} color="#111" />
+            <PxgLogo height={36} color="black" />
             <p style={{ color: 'var(--white-muted)', marginTop: '20px', fontSize: '0.88rem', letterSpacing: '0.1em' }}>Engar vörur fundust</p>
             <Link href="/products" className="btn-gold" style={{ marginTop: '20px', display: 'inline-flex' }}>Sjá allar vörur</Link>
           </div>
