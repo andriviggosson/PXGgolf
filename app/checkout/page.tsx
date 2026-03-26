@@ -88,7 +88,7 @@ export default function CheckoutPage() {
       <SiteNav />
       <div style={{ paddingTop: '68px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <PxgLogo height={36} color="#111" />
+          <PxgLogo height={36} color="black" />
           <h2 style={{ color: 'var(--white)', marginTop: '24px', marginBottom: '12px', fontSize: '1.8rem' }}>Körfan er tóm</h2>
           <Link href="/products" className="btn-gold btn-gold-fill" style={{ marginTop: '8px' }}>Skoða vörur</Link>
         </div>
@@ -168,7 +168,7 @@ export default function CheckoutPage() {
                         <div style={{ width: '52px', height: '52px', background: '#060606', border: '1px solid var(--black-border)', flexShrink: 0, overflow: 'hidden' }}>
                           {item.image_url
                             ? <img src={item.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><PxgLogo height={12} color="#111" /></div>
+                            : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><PxgLogo height={12} color="black" /></div>
                           }
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
