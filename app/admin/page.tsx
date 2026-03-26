@@ -387,7 +387,7 @@ export default function AdminPage() {
                     onMouseEnter={e => (e.currentTarget.style.background = '#0d0d0d')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'var(--black-card)')}>
                     <div style={{ width: '48px', height: '48px', background: '#050505', border: '1px solid var(--black-border)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      {club.image_url ? <img src={club.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <PxgLogo height={12} color="#black" />}
+                      {club.image_url ? <img src={club.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <PxgLogo height={12} color="black" />}
                     </div>
                     <div>
                       <div style={{ color: '#fff', fontSize: '0.88rem', fontFamily: 'Cormorant Garamond' }}>{club.name}</div>
@@ -399,7 +399,7 @@ export default function AdminPage() {
                       <button onClick={() => toggleField(club, 'is_new')} title="Nýtt" style={{ background: 'none', border: 'none', cursor: 'pointer', color: club.is_new ? 'var(--white)' : 'var(--black-border)', fontSize: '0.8rem' }}>N</button>
                       <button onClick={() => toggleField(club, 'is_featured')} title="Úrval" style={{ background: 'none', border: 'none', cursor: 'pointer', color: (club.is_featured || club.featured) ? 'var(--gold)' : 'var(--black-border)', fontSize: '1rem' }}>★</button>
                     </div>
-                    <button onClick={() => toggleField(club, 'in_stock')} style={{ background: 'none', border: `1px solid ${club.in_stock ? '#2a4a2a' : 'var(--black-border)'}`, color: club.in_stock ? '#4caf50' : 'var(--white-muted)', fontSize: '0.6rem', letterSpacing: '0.06em', padding: '4px 8px', cursor: 'pointer', fontFamily: 'Barlow Condensed' }}>
+                    <button onClick={() => toggleField(club, 'in_stock')} style={{ background: 'none', border: `1px solid ${club.in_stock ? '#2a4a2a' : 'var(---border)'}`, color: club.in_stock ? '#4caf50' : 'var(--white-muted)', fontSize: '0.6rem', letterSpacing: '0.06em', padding: '4px 8px', cursor: 'pointer', fontFamily: 'Barlow Condensed' }}>
                       {club.in_stock ? 'Á lager' : 'Uppselt'}
                     </button>
                     <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
